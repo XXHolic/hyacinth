@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>List</title>
+  <link rel="stylesheet" href="./reset.css">
+  <style>
+    html,body {background-color: #fafafa}
+    .df {
+      display: flex;
+    }
+    .tc {
+      text-align: center
+    }
+    .list {
+      display: flex;
+      flex-flow: row wrap;
+      margin: 20px;
+    }
+
+    .list li {
+      overflow: hidden;
+      margin-right: 16px;
+      margin-bottom: 24px;
+    }
+
+    .list-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .list-name{
+      font-size: 20px;
+      color: #1c1d1f;
+    }
+
+    .list-poster {
+      height: 240px
+    }
+
+    h3 {padding-left: 10px;}
+    @media screen and (max-width: 800px) {
+      .list li {
+        width: 50%;
+        margin-right: 0px;
+      }
+      .list-poster {
+        height: 170px
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2 class="tc"></h2>
+  <ul id='comicList' class="list">
+    暂无
+  </ul>
+
+  <script>
+    function combineStr(data) {
+      const dataLen = data.length;
+      let htmStr = '';
+      for (let index = 1; index <= dataLen; index++) {
+        const ele = data[index-1]
+        let showText = ele.name
+        let posterImg = ele.poster
+        let liItem = `<li><a class="list-item" title=${showText} href='./comic.html?name=${showText}'><img class="list-poster" src="${posterImg}" /><div class="list-name">${showText}</div></a></li>`;
+        htmStr = htmStr + liItem;
+      }
+      return htmStr
+    }
+
+    function getChapterList() {
+      fetch(`../../static/list.json`).then((res) => {
+        return res.json();
+      }).then(function(data) {
+          const list = data.list || []
+          const serialEleStr = combineStr(list)
+          serialEleStr && (document.querySelector('#comicList').innerHTML = serialEleStr)
+      });
+    }
+
+    function init() {
+      getChapterList()
+    }
+
+    init();
+  </script>
+</body>
+</html>
